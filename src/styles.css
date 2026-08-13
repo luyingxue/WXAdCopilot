@@ -103,7 +103,7 @@ button:disabled {
 }
 
 .about-lower-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   margin-top: 16px;
 }
 
@@ -194,7 +194,33 @@ button:disabled {
 }
 
 .about-contact-card {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 170px;
+  align-items: center;
+  gap: 20px;
   border-color: #c4eadf;
+}
+
+.about-contact-copy {
+  min-width: 0;
+}
+
+.about-wechat-label {
+  display: block;
+  margin-top: 18px;
+  color: #263746;
+  font-size: 13px;
+}
+
+.about-wechat-qr {
+  display: block;
+  width: 170px;
+  height: 216px;
+  object-fit: cover;
+  border: 1px solid #e0e6eb;
+  border-radius: 12px;
+  background: white;
 }
 
 .about-footer {
@@ -214,6 +240,15 @@ button:disabled {
 
   .about-lower-grid {
     grid-template-columns: 1fr;
+  }
+
+  .about-contact-card {
+    grid-template-columns: minmax(0, 1fr) 150px;
+  }
+
+  .about-wechat-qr {
+    width: 150px;
+    height: 191px;
   }
 
   .about-card-feature {

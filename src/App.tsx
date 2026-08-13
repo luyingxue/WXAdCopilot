@@ -809,7 +809,7 @@ function AboutPanel() {
           <h1>WXAdCopilot</h1>
           <p>本地优先的视频号带货投流量化分析与智能盯盘工具。</p>
         </div>
-        <span className="about-version">v0.2.0</span>
+        <span className="about-version">v0.2.1</span>
       </div>
 
       <div className="about-grid">
@@ -861,17 +861,25 @@ function AboutPanel() {
           </a>
         </article>
         <article className="about-card about-contact-card">
-          <span className="eyebrow">商业合作</span>
-          <h2>需要开发其他系统？</h2>
-          <p>
-            如果你需要数据分析、业务自动化或桌面管理系统，欢迎联系作者交流或定制开发。
-          </p>
-          <a
-            className="about-contact-link emphasis"
-            href="mailto:support@zwill.org"
-          >
-            support@zwill.org
-          </a>
+          <div className="about-contact-copy">
+            <span className="eyebrow">商业合作</span>
+            <h2>需要开发其他系统？</h2>
+            <p>
+              如果你需要数据分析、业务自动化或桌面管理系统，欢迎联系作者交流或定制开发。
+            </p>
+            <strong className="about-wechat-label">微信扫码添加 WILL</strong>
+            <a
+              className="about-contact-link emphasis"
+              href="mailto:support@zwill.org"
+            >
+              support@zwill.org
+            </a>
+          </div>
+          <img
+            className="about-wechat-qr"
+            src="./wechat-will.jpg"
+            alt="WILL 的微信二维码"
+          />
         </article>
       </div>
 

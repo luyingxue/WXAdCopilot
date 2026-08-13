@@ -122,7 +122,11 @@ npm run dist               # 生成当前平台安装包
 - 功能建议和 Bug：提交 [GitHub Issue](https://github.com/luyingxue/WXAdCopilot/issues)；
 - 代码贡献：阅读 [CONTRIBUTING.md](CONTRIBUTING.md) 后提交 Pull Request；
 - 安全与隐私问题：按照 [SECURITY.md](SECURITY.md) 私下报告；
-- 其他系统定制开发与商业合作：`support@zwill.org`。
+- 其他系统定制开发与商业合作：微信扫码添加 `WILL`，或发送邮件至 `support@zwill.org`。
+
+<p align="center">
+  <img src="public/wechat-will.jpg" alt="WILL 的微信二维码" width="300" />
+</p>
 
 ## 开源许可
 
