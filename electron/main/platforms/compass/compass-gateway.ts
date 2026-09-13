@@ -206,7 +206,30 @@ async function compassRequest<T>(
         (async () => {
           const { moduleUrl, requestUrl, requestData } = ${input};
           const module = await import(moduleUrl);
-          const client = module.aZ;
+          const candidates = [];
+          const seen = new Set();
+          const visit = (value, depth = 0) => {
+            if (
+              value === null ||
+              (typeof value !== "object" && typeof value !== "function") ||
+              seen.has(value) ||
+              depth > 2
+            ) return;
+            seen.add(value);
+            if (typeof value.post === "function") candidates.push(value);
+            for (const child of Object.values(value)) visit(child, depth + 1);
+          };
+          visit(module);
+          const client = candidates.find((candidate) =>
+            typeof candidate.post === "function"
+          );
+          if (!client) {
+            throw new Error(
+              "罗盘请求客户端模块已变化：未找到 post 方法（exports=" +
+                Object.keys(module).join(",") +
+                "）"
+            );
+          }
           return client.post({
             url: requestUrl,
             ...(requestData ? { data: requestData } : {}),

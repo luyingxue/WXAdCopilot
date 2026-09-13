@@ -91,10 +91,30 @@ export async function establishCompassBusinessContext(
     `(async () => {
       const config = ${input};
       const module = await import(config.routerModuleUrl);
-      const client = module.aZ;
-      const accountStore = module.b2?.();
-      if (!client?.get || !client?.post || !accountStore?.setSession) {
-        throw new Error("罗盘官方请求客户端已变化");
+      const candidates = [];
+      const seen = new Set();
+      const visit = (value, depth = 0) => {
+        if (
+          value === null ||
+          (typeof value !== "object" && typeof value !== "function") ||
+          seen.has(value) ||
+          depth > 2
+        ) return;
+        seen.add(value);
+        if (
+          typeof value.get === "function" &&
+          typeof value.post === "function"
+        ) candidates.push(value);
+        for (const child of Object.values(value)) visit(child, depth + 1);
+      };
+      visit(module);
+      const client = candidates[0];
+      if (!client) {
+        throw new Error(
+          "罗盘官方请求客户端模块已变化：未找到 get/post 方法（exports=" +
+            Object.keys(module).join(",") +
+            "）"
+        );
       }
       const withTimeout = (promise, label) => Promise.race([
         promise,
@@ -133,14 +153,7 @@ export async function establishCompassBusinessContext(
         } catch {}
       }
       const feedBizId = feedAccountId.split("@")[0] || "";
-      const selectedBizId =
-        typeof accountStore.currentBizId === "string"
-          ? accountStore.currentBizId
-          : "";
       let selected = talentAccounts.find((item) => item?.appid === feedBizId);
-      if (!selected) {
-        selected = talentAccounts.find((item) => item?.appid === selectedBizId);
-      }
       if (!selected && talentAccounts.length === 1) selected = talentAccounts[0];
       if (!selected && accounts.length === 1) selected = accounts[0];
       if (!selected) {
@@ -163,21 +176,6 @@ export async function establishCompassBusinessContext(
       if (sessionResponse?.code !== 0 || !sessionResponse.token) {
         throw new Error("罗盘业务会话建立失败");
       }
-      accountStore.shopList = storeAccounts;
-      accountStore.finderList = finderAccounts;
-      accountStore.talentList = talentAccounts;
-      await withTimeout(
-        accountStore.setSession({
-          bizId: selected.appid,
-          bizType: selected.bizType,
-          token: sessionResponse.token,
-          csrfToken: sessionResponse.csrfToken || "",
-          rand: sessionResponse.rand || "",
-        }, { switchTo: false }),
-        "罗盘会话保存",
-      );
-      accountStore.currentBizId = selected.appid;
-
       const accountInfo = await withTimeout(
         client.get({ url: config.accountInfoEndpoint }),
         "罗盘账号验证请求",
